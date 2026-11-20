@@ -1,0 +1,6 @@
+/tiles/*
+  Cache-Control: public, max-age=31536000, immutable
+/thumb/*
+  Cache-Control: public, max-age=31536000, immutable
+/pannellum.js
+  Cache-Control: public, max-age=604800
