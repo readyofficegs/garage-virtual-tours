@@ -1,4 +1,8 @@
 # Garage Society virtual tours
 
-Causeway Bay 360 tour (11/F + 16/F). Deployed by Netlify from this repo; no build step.
-Add `#edit` to the URL to open the wayfinder editor.
+One folder per location, served by Netlify (no build step):
+
+- `causeway-bay/` — 11/F + 16/F
+- `central/` — 4/F + 5/F (to come)
+
+Add `#edit` to a tour URL to open the wayfinder editor.

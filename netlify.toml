@@ -1,3 +1,9 @@
 [build]
   publish = "."
   command = ""
+
+# Bare domain opens Causeway Bay until there's a landing page
+[[redirects]]
+  from = "/"
+  to = "/causeway-bay/"
+  status = 302
