@@ -7,7 +7,7 @@ window.TOUR = {
     ["100642", "Lift Lobby", [["100734", 176, "Reception"], ["105422", 110, "Lift to 4/F", -5]]],
     ["100734", "Reception", [["102022", -120, "Lounge"], ["102620", 134, "Offices & Meeting Rooms", -4], ["102502", 167, "Pantry", -5], ["100642", 1, "Lift Lobby"]]],
     ["102022", "Lounge", [["102113", 138, "Lounge & Bar"], ["102300", -169, "Private Office"], ["100734", 68, "Reception"]]],
-    ["102113", "Lounge & Bar", [["102620", 57, "Offices & Meeting Rooms", 0], ["102502", 105, "Pantry"], ["102200", -161, "Private Office"], ["102300", -136, "Private Office"], ["102022", -28, "Lounge"]]],
+    ["102113", "Lounge & Bar", [["102620", 57, "Offices & Meeting Rooms", 0], ["102502", 105, "Pantry"], ["102200", -175, "Private Office"], ["102300", -120, "Private Office"], ["102022", -28, "Lounge"]]],
     ["102200", "Private Office", [["102113", 15, "Lounge"]]],
     ["102300", "Private Office", [["102113", 35, "Lounge"]]],
     ["102502", "Pantry", [["102620", 7, "Offices & Meeting Rooms"], ["102113", 108, "Lounge"], ["100734", -167, "Reception"]]],
