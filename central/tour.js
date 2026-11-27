@@ -4,7 +4,7 @@ window.TOUR = {
   first: "100642",
   floors: [{ label: "5/F", first: "100642" }],
   scenes: [
-    ["100642", "Lift Lobby", [["100734", 176, "Reception"], ["104344", -173, "Private Offices"]]],
+    ["100642", "Lift Lobby", [["100734", 176, "Reception"]]],
     ["100734", "Reception", [["102022", -120, "Lounge"], ["100642", 1, "Lift Lobby"]]],
     ["102022", "Lounge", [["102113", 138, "Lounge & Bar"], ["102300", -169, "Private Office"], ["100734", 68, "Reception"]]],
     ["102113", "Lounge & Bar", [["102502", 105, "Pantry"], ["102200", -161, "Private Office"], ["102300", -136, "Private Office"], ["102022", -28, "Lounge"]]],
