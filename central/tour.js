@@ -34,7 +34,7 @@ window.TOUR = {
     ["105953", "Meeting Room C", [["105821", -140, "Back to lounge"]]],
     ["110046", "Lounge & Pantry", [["110135", 7, "Offices"], ["110335", -77], ["105821", 120, "Coworking Table"]]],
     ["110135", "Office Corridor", [["110226", 84], ["110046", -171, "Lounge"]]],
-    ["110226", "Office Corridor", [["110135", -167, "Lounge"]]],
+    ["110226", "Office Corridor", [["110135", -167]]],
     ["110335", "Pantry", [["110421", -162, "Offices"], ["110046", 15, "Lounge"]]],
     ["110421", "Office Corridor", [["110514", -171], ["110335", 101, "Pantry"]]],
     ["110514", "Office Corridor", [["110605", -80], ["110421", 5, "Pantry"]]],
