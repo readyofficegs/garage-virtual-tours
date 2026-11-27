@@ -19,9 +19,9 @@ window.TOUR = {
     ["103231", "Office Corridor", [["103319", 165, "Meeting Room B"], ["103410", -160], ["103014", -76]]],
     ["103319", "Meeting Room B", [["103231", 40, "Back to corridor"]]],
     ["103410", "Office Corridor", [["103502", 100], ["103231", -165]]],
-    ["103502", "Office Corridor", [["103654", -117, "Team Office"], ["103556", -43, "Two-Desk Office"], ["104058", -170], ["103410", 6]]],
+    ["103502", "Office Corridor", [["103654", -117, "Dedicated Desks"], ["103556", -43, "Two-Desk Office"], ["104058", -170], ["103410", 6]]],
     ["103556", "Two-Desk Office", [["103502", -110, "Back to corridor"]]],
-    ["103654", "Team Office", [["103502", -170, "Back to corridor"]]],
+    ["103654", "Dedicated Desks", [["103502", -170, "Back to corridor"]]],
     ["104058", "Office Corridor", [["104200", -85, "Private Office"], ["104247", 102], ["103502", 10]]],
     ["104200", "Private Office", [["104058", -169, "Back to corridor"]]],
     ["104247", "Office Corridor", [["104344", -179], ["104058", 4]]],
@@ -38,9 +38,9 @@ window.TOUR = {
     ["110335", "Pantry", [["110421", -162, "Offices"], ["110046", 15, "Lounge"]]],
     ["110421", "Office Corridor", [["110514", -171], ["110335", 101, "Pantry"]]],
     ["110514", "Office Corridor", [["110605", -80], ["110421", 5, "Pantry"]]],
-    ["110605", "Office Corridor", [["110652", -98, "Window Office"], ["110740", -170, "Private Office"], ["110837", 120, "Team Office"], ["110514", 16]]],
+    ["110605", "Office Corridor", [["110652", -98, "Window Office"], ["110740", -170, "Private Office"], ["110837", 120, "Dedicated Desks"], ["110514", 16]]],
     ["110652", "Window Office", [["110605", 72, "Back to corridor"]]],
     ["110740", "Private Office", [["110605", -175, "Back to corridor"]]],
-    ["110837", "Team Office", [["110605", 18, "Back to corridor"]]]
+    ["110837", "Dedicated Desks", [["110605", 18, "Back to corridor"]]]
   ]
 };
