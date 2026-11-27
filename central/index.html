@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>if(!location.pathname.endsWith("/")&&!/\.html$/.test(location.pathname))location.replace(location.pathname+"/"+location.search+location.hash);</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Garage Society Central – Virtual Tour</title>
+<meta name="description" content="Walk through Garage Society Central in 360°: private offices, meeting rooms, lounge and pantry on 5/F.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Garage Society">
+<meta property="og:title" content="Garage Society Central – 360° Virtual Tour">
+<meta property="og:description" content="Walk through our offices, meeting rooms, lounge and pantry.">
+<meta property="og:url" content="https://tour.thegaragesociety.com/central/">
+<meta property="og:image" content="https://tour.thegaragesociety.com/central/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tour.thegaragesociety.com/central/og.jpg">
+<link rel="stylesheet" href="pannellum.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231d4a40'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23f5b800'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+  :root { --green:#1d4a40; --green-2:#2b6658; --yellow:#f5b800; --ink:#111; --paper:#fff; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; background:#000; font-family:"DM Sans", system-ui, sans-serif; color:var(--paper); overflow:hidden; }
+  #pano { position:fixed; inset:0; }
+  /* travel veil: soft blur + slight darken while moving between spots */
+  .veil { position:fixed; inset:0; z-index:2; pointer-events:none; opacity:0;
+          backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px);
+          background:radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,0,0,.18) 100%);
+          transition:opacity .25s ease; }
+  .veil.on { opacity:1; }
+
+  /* top bar */
+  .top { position:fixed; top:0; left:0; right:0; z-index:5; display:flex; align-items:center; gap:12px;
+         padding:14px 16px; background:linear-gradient(rgba(0,0,0,.55), transparent); pointer-events:none; }
+  .brand { font-weight:700; letter-spacing:.02em; font-size:15px; display:flex; align-items:center; gap:8px; }
+  .brand i { width:10px; height:10px; border-radius:50%; background:var(--yellow); display:inline-block; }
+  .here { font-size:14px; opacity:.9; }
+  .here b { font-weight:500; }
+  .count { margin-left:auto; font-size:12px; opacity:.75; }
+  .floors { pointer-events:auto; display:flex; background:rgba(17,17,17,.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+         border-radius:999px; padding:3px; gap:2px; }
+  .floors button { all:unset; cursor:pointer; font-size:13px; font-weight:700; padding:5px 12px; border-radius:999px; color:#fff; opacity:.8; }
+  .floors button:hover { opacity:1; background:rgba(255,255,255,.12); }
+  .floors button.on { background:var(--yellow); color:var(--ink); opacity:1; }
+
+  /* bottom controls */
+  .bar { position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:6; display:flex; gap:6px;
+         background:rgba(17,17,17,.72); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+         padding:6px; border-radius:999px; box-shadow:0 6px 24px rgba(0,0,0,.35); }
+  .bar button { all:unset; cursor:pointer; height:40px; min-width:40px; padding:0 14px; border-radius:999px;
+         display:flex; align-items:center; justify-content:center; gap:8px; font-size:14px; font-weight:500; color:#fff; }
+  .bar button:hover { background:rgba(255,255,255,.12); }
+  .bar button.on { background:var(--yellow); color:var(--ink); }
+  .bar svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  @media (max-width:520px){ .bar .lbl { display:none; } .count { display:none; } .here { display:none; } }
+
+  /* room drawer */
+  .drawer { position:fixed; left:0; right:0; bottom:0; z-index:7; max-height:62vh; overflow:auto;
+         background:rgba(14,22,20,.94); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+         border-radius:18px 18px 0 0; padding:18px 16px 90px; transform:translateY(100%); transition:transform .28s ease; }
+  .drawer.open { transform:none; }
+  .drawer h2 { margin:0 0 12px; font-size:15px; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+  .drawer h2 button { all:unset; cursor:pointer; font-size:13px; opacity:.75; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+  .tile { all:unset; cursor:pointer; border-radius:10px; overflow:hidden; background:#222; position:relative; aspect-ratio:2/1; }
+  .tile img { width:100%; height:100%; object-fit:cover; display:block; opacity:.85; transition:opacity .2s; }
+  .tile:hover img { opacity:1; }
+  .tile span { position:absolute; left:0; right:0; bottom:0; padding:16px 8px 6px; font-size:12px; font-weight:500;
+         background:linear-gradient(transparent, rgba(0,0,0,.8)); }
+  .tile.cur { outline:3px solid var(--yellow); outline-offset:-3px; }
+  .tile em { position:absolute; top:6px; left:6px; font-style:normal; font-size:11px; background:rgba(0,0,0,.55); padding:1px 6px; border-radius:6px; }
+
+  /* wayfinder hotspots: floor marker (ring + dot), drawn in perspective so it sits on the floor */
+  .wf { width:64px; height:64px; cursor:pointer; perspective:220px; }
+  .wf .ring { position:absolute; inset:6px; border-radius:50%; border:4px solid rgba(255,255,255,.95);
+         box-sizing:border-box; background:rgba(0,0,0,.10); transform:rotateX(58deg);
+         box-shadow:0 0 0 1px rgba(0,0,0,.12), 0 6px 14px rgba(0,0,0,.25);
+         display:flex; align-items:center; justify-content:center; transition:transform .18s ease, border-color .18s; }
+  .wf .dot { width:40%; height:40%; border-radius:50%; background:rgba(230,230,230,.92); transition:background .18s, transform .18s; }
+  .wf:hover .ring { transform:rotateX(58deg) scale(1.12); }
+  .wf:hover .dot { background:var(--yellow); transform:scale(1.15); }
+  .wf .ring::after { content:""; position:absolute; inset:-4px; border-radius:50%; border:2px solid rgba(255,255,255,.7);
+         animation:ripple 2.6s ease-out infinite; }
+  .wf:hover .ring::after { animation:none; opacity:0; }
+  .wf .tip { position:absolute; top:52px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:13px; font-weight:500;
+         background:rgba(17,17,17,.82); padding:4px 10px; border-radius:999px; pointer-events:none; opacity:0; transition:opacity .15s; }
+  .wf:hover .tip, .touch .wf .tip { opacity:1; }
+  @keyframes ripple { 0% { transform:scale(1); opacity:.8; } 100% { transform:scale(1.6); opacity:0; } }
+
+  /* hide pannellum's own chrome we replace */
+  .pnlm-load-button, .pnlm-panorama-info, .pnlm-load-box { display:none !important; }
+  .pnlm-controls-container { top:64px !important; }
+
+  /* editor */
+  .editor { position:fixed; top:64px; right:12px; z-index:8; width:300px; max-height:calc(100vh - 150px); overflow:auto;
+         background:rgba(14,22,20,.95); border:1px solid rgba(255,255,255,.15); border-radius:14px; padding:14px; font-size:13px; display:none; }
+  .editing .editor { display:block; }
+  .editor h3 { margin:0 0 4px; font-size:14px; color:var(--yellow); }
+  .editor p { margin:6px 0; opacity:.85; line-height:1.4; }
+  .editor select, .editor input { width:100%; padding:6px 8px; border-radius:8px; border:1px solid #444; background:#1b1b1b; color:#fff; font:inherit; margin:4px 0; }
+  .editor button { all:unset; cursor:pointer; padding:6px 10px; border-radius:8px; background:#2a2a2a; margin:3px 4px 3px 0; display:inline-block; }
+  .editor button.primary { background:var(--yellow); color:var(--ink); font-weight:700; }
+  .editor button.armed { background:#e2533c; }
+  .editor ul { list-style:none; padding:0; margin:6px 0; }
+  .editor li { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+  .editor li small { opacity:.6; }
+  .editor textarea { width:100%; height:110px; background:#111; color:#9f9; border:1px solid #333; border-radius:8px; font:11px ui-monospace, monospace; }
+  .toast { position:fixed; left:50%; top:70px; transform:translateX(-50%); background:var(--yellow); color:var(--ink); padding:8px 14px; border-radius:999px;
+         font-size:13px; font-weight:700; z-index:9; opacity:0; transition:opacity .2s; pointer-events:none; }
+  .toast.show { opacity:1; }
+  .intro { position:fixed; inset:0; z-index:10; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.45); transition:opacity .4s; }
+  .intro.gone { opacity:0; pointer-events:none; }
+  .intro div { background:rgba(14,22,20,.95); padding:22px 24px; border-radius:16px; max-width:320px; text-align:center; }
+  .intro h1 { margin:0 0 6px; font-size:20px; }
+  .intro p { margin:0 0 16px; font-size:14px; opacity:.85; line-height:1.45; }
+  .intro .addr { font-size:12px; opacity:.7; margin:-2px 0 12px; }
+  .intro .more { display:block; margin-top:14px; font-size:13px; color:#fff; opacity:.8; }
+  .intro button { all:unset; cursor:pointer; background:var(--yellow); color:var(--ink); font-weight:700; padding:10px 20px; border-radius:999px; }
+</style>
+</head>
+<body>
+<div id="pano"></div>
+<div class="veil" id="veil"></div>
+
+<div class="top">
+  <div class="brand"><i></i>Garage Society Central</div>
+  <div class="floors" id="floors"></div>
+  <div class="here"><b id="here"></b></div>
+  <div class="count" id="count"></div>
+</div>
+
+<div class="bar">
+  <button id="prev" title="Previous stop"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button id="rooms" title="All rooms"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="lbl">Rooms</span></button>
+  <button id="spin" title="Auto-rotate"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg><span class="lbl">Rotate</span></button>
+  <button id="fs" title="Fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button id="next" title="Next stop"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+
+<div class="drawer" id="drawer">
+  <h2><span id="drawerTitle">All rooms</span> <button id="closeDrawer">Close ✕</button></h2>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="intro" id="intro"><div>
+  <h1>Garage Society<br>Central</h1>
+  <p class="addr">Dina House, Ruttonjee Centre, 3–11 Duddell Street · 5 min from Central MTR</p>
+  <p>Drag to look around. Tap the floor markers to walk through, or open <b>Rooms</b> to jump anywhere.</p>
+  <button id="start">Start the tour</button>
+  <a class="more" href="https://www.thegaragesociety.com/location/central">Pricing &amp; enquiries ↗</a>
+</div></div>
+
+<div class="editor" id="editor">
+  <h3>Wayfinder editor</h3>
+  <p>Choose a destination, press <b>Place link</b>, then click where the arrow should sit.</p>
+  <select id="edTarget"></select>
+  <input id="edLabel" placeholder="Label (optional, defaults to room name)">
+  <button id="edArm" class="primary">Place link</button>
+  <button id="edStart">Set start view here</button>
+  <p><b>Links in this scene</b></p>
+  <ul id="edList"></ul>
+  <p><b>Rename scene</b></p>
+  <input id="edTitle">
+  <p>Changes save in this browser. When you're done, copy the config and send it to Claude.</p>
+  <button id="edCopy" class="primary">Copy config</button>
+  <button id="edReset">Reset to original</button>
+  <textarea id="edOut" readonly></textarea>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="pannellum.js"></script>
+<script src="tour.js"></script>
+<script src="multires.js"></script>
+<script>
+(function(){
+  const ORIGINAL = JSON.parse(JSON.stringify(window.TOUR));
+  const STORE = "gs16-tour-edits-v1";
+  const editing = location.hash === "#edit";
+  if (editing) document.body.classList.add("editing");
+  if (matchMedia("(hover: none)").matches) document.body.classList.add("touch");
+
+  // load (possibly edited) data
+  let data = ORIGINAL;
+  if (editing) { try { const s = localStorage.getItem(STORE); if (s) data = JSON.parse(s); } catch(e){} }
+  const T = JSON.parse(JSON.stringify(data));
+  const byId = {}; T.scenes.forEach((s,i) => byId[s[0]] = { i, title:s[1], links:s[2], start:s[3] });
+  const order = T.scenes.map(s => s[0]);
+  // floors: each floor is everything reachable from its first spot without taking a lift
+  const FLOORS = T.floors || [{ label:"", first:T.first }];
+  const floorOf = {};
+  const isLift = l => l[2] && /^Lift to/i.test(l[2]);
+  FLOORS.forEach(f => { const q = [f.first]; while (q.length) { const id = q.pop(); if (!byId[id] || floorOf[id]) continue;
+    floorOf[id] = f.label; byId[id].links.forEach(l => { if (!isLift(l)) q.push(l[0]); }); } });
+  order.forEach(id => { if (!floorOf[id]) floorOf[id] = FLOORS[0].label; });
+  const onFloor = label => order.filter(id => floorOf[id] === label);
+
+  const arrow = '<svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  function makeHotspot(div, args){
+    div.classList.add("wf");
+    div.innerHTML = '<div class="ring"><div class="dot"></div></div><div class="tip"></div>';
+    div.querySelector(".tip").textContent = args.label;
+  }
+  function hs(link, idx){
+    const [target, yaw, label, pitch, arrive, rot] = link;
+    // arrive facing the direction of travel: opposite of the destination's link back to here
+    let ty;
+    const back = byId[target] && byId[target].links.find(l => l[0] === hs.from);
+    if (arrive != null) ty = arrive;
+    else if (back) {
+      // face the onward arrow that best continues the walk (handles corners), else straight on
+      const ahead = ((back[1] + 360) % 360) - 180;
+      const diff = y => Math.abs(((y - ahead + 540) % 360) - 180);
+      const onward = byId[target].links.filter(l => l[0] !== hs.from).sort((a, b) => diff(a[1]) - diff(b[1]))[0];
+      ty = (onward && diff(onward[1]) < 120) ? onward[1] : ahead;
+    }
+    return { id:"l"+idx, type:"info", clickHandlerFunc:(e) => { if (e) e.stopPropagation(); travel(target, yaw, ty); }, yaw:yaw, pitch:(pitch ?? -14),
+             cssClass:"wf", createTooltipFunc:makeHotspot, createTooltipArgs:{ label:(label || byId[target]?.title || target), rot:rot } };
+  }
+  function firstYaw(id){ const s = byId[id]; if (s.start != null) return s.start; return s.links.length ? s.links[0][1] : 0; }
+
+  const scenes = {};
+  order.forEach(id => {
+    const mr = (window.MULTIRES || {})[id];
+    scenes[id] = Object.assign({ title: byId[id].title },
+                   mr ? { type:"multires", multiRes: mr } : { type:"equirectangular", panorama:"img/"+id+".jpg" }, {
+                   yaw:firstYaw(id), pitch:0, hfov:100, hotSpots: (hs.from = id, byId[id].links.map(hs)) });
+  });
+
+  const hashScene = (!editing && location.hash.startsWith("#s")) ? location.hash.slice(2) : null;
+  const viewer = pannellum.viewer("pano", {
+    default: { firstScene: (hashScene && byId[hashScene]) ? hashScene : T.first, sceneFadeDuration:450, autoLoad:true,
+               showControls:true, showZoomCtrl:false, showFullscreenCtrl:false, compass:false, minHfov:50, maxHfov:120 },
+    scenes
+  });
+
+  const $ = id => document.getElementById(id);
+  function update(){
+    const id = viewer.getScene();
+    $("here").textContent = byId[id].title;
+    const fl = floorOf[id], list = onFloor(fl);
+    $("count").textContent = (list.indexOf(id)+1) + " / " + list.length;
+    document.querySelectorAll(".tile").forEach(t => { t.classList.toggle("cur", t.dataset.id === id); t.style.display = floorOf[t.dataset.id] === fl ? "" : "none"; });
+    document.querySelectorAll("#floors button").forEach(b => b.classList.toggle("on", b.dataset.f === fl));
+    $("drawerTitle").textContent = FLOORS.length > 1 ? "Rooms · " + fl : "All rooms";
+    if (!editing) { try { history.replaceState(null, "", "#s"+id); } catch(e){} }
+    if (editing) renderEditor();
+  }
+  viewer.on("load", update);
+
+  // ---- smooth travel: turn toward the arrow, push forward with blur, ease out on arrival ----
+  let busy = false;
+  const veil = document.getElementById("veil");
+  let veilTimer = null;
+  function veilSoon(){ clearTimeout(veilTimer); veilTimer = setTimeout(() => { if (busy) veil.classList.add("on"); }, 250); }
+  function arrive(){
+    clearTimeout(veilTimer);
+    veil.classList.remove("on");
+    try { viewer.setHfov(100, 700); } catch(e){}
+    busy = false;
+    preload(viewer.getScene());
+  }
+  viewer.on("load", () => { if (busy) setTimeout(arrive, 60); });
+  viewer.on("error", () => { veil.classList.remove("on"); busy = false; });
+  function travel(target, yaw, ty){
+    if (busy || target === viewer.getScene()) return;
+    busy = true;
+    viewer.stopAutoRotate();
+    if (spinning) { spinning = false; document.getElementById("spin").classList.remove("on"); }
+    viewer.lookAt(-4, yaw, 58, 420, () => { veilSoon(); viewer.loadScene(target, 0, (ty == null ? undefined : ty), 72); });
+    setTimeout(() => { if (busy && viewer.getScene() === target) arrive(); }, 6000); // safety
+  }
+  function jump(id){
+    if (busy || id === viewer.getScene()) return;
+    busy = true; veilSoon();
+    viewer.loadScene(id, undefined, undefined, 80);
+  }
+
+  // ---- idle drift: after a few quiet seconds, rotate very slowly to show it's 360 ----
+  let idleT = null;
+  function idle(){
+    clearTimeout(idleT);
+    if (!spinning) { try { viewer.stopAutoRotate(); } catch(e){} }
+    idleT = setTimeout(() => { if (!busy && !spinning && !document.body.classList.contains("editing")) viewer.startAutoRotate(-1.2); }, 5000);
+  }
+  ["pointerdown", "pointermove", "wheel", "touchstart", "keydown"].forEach(ev => window.addEventListener(ev, idle, { passive:true }));
+  viewer.on("load", idle);
+
+  // ---- preload neighbouring spots so moves feel instant ----
+  const warmed = new Set();
+  function warm(id){
+    if (!id || warmed.has(id)) return; warmed.add(id);
+    const mr = (window.MULTIRES || {})[id];
+    const urls = [];
+    if (mr) {
+      // smallest level (whole spot, ~85 KB) + next level for a sharp first view
+      for (const f of "fbudlr") {
+        urls.push(mr.basePath + "/1/" + f + "0_0.jpg");
+        const n = Math.ceil((mr.cubeResolution / Math.pow(2, mr.maxLevel - 2)) / mr.tileResolution);
+        for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) urls.push(mr.basePath + "/2/" + f + i + "_" + j + ".jpg");
+      }
+    } else urls.push("img/" + id + ".jpg");
+    urls.forEach(u => { const im = new Image(); im.crossOrigin = "anonymous"; im.decoding = "async"; im.src = u; });
+  }
+  function preload(id){
+    const s = byId[id]; if (!s) return;
+    s.links.forEach(l => warm(l[0]));
+    warm(order[(s.i + 1) % order.length]);
+  }
+  viewer.on("load", function first(){ preload(viewer.getScene()); viewer.off("load", first); });
+  viewer.on("scenechange", () => setTimeout(update, 0));
+
+  // room grid
+  order.forEach((id, i) => {
+    const b = document.createElement("button"); b.className = "tile"; b.dataset.id = id;
+    b.innerHTML = '<img loading="lazy" alt=""><em></em><span></span>';
+    b.querySelector("img").src = "thumb/"+id+".jpg";
+    b.querySelector("em").textContent = onFloor(floorOf[id]).indexOf(id) + 1;
+    b.querySelector("span").textContent = byId[id].title;
+    b.onclick = () => { go(id); closeDrawer(); };
+    $("grid").appendChild(b);
+  });
+  function go(id){ jump(id); }
+  function closeDrawer(){ $("drawer").classList.remove("open"); }
+  $("rooms").onclick = () => $("drawer").classList.toggle("open");
+  $("closeDrawer").onclick = closeDrawer;
+  function step(d){ const id = viewer.getScene(), list = onFloor(floorOf[id]), i = list.indexOf(id); go(list[(i + d + list.length) % list.length]); }
+  $("prev").onclick = () => step(-1);
+  $("next").onclick = () => step(1);
+  if (FLOORS.length > 1) FLOORS.forEach(f => {
+    const b = document.createElement("button"); b.textContent = f.label; b.dataset.f = f.label;
+    b.onclick = () => { if (floorOf[viewer.getScene()] !== f.label) go(f.first); };
+    $("floors").appendChild(b);
+  }); else $("floors").style.display = "none";
+  // first scene can finish loading before the handlers above are attached
+  (function firstUpdate(n){ try { if (viewer.getScene()) { update(); return; } } catch(e){} if (n < 50) setTimeout(() => firstUpdate(n+1), 100); })(0);
+  let spinning = false;
+  $("spin").onclick = () => { spinning = !spinning; spinning ? viewer.startAutoRotate(-4) : viewer.stopAutoRotate(); $("spin").classList.toggle("on", spinning); };
+  $("fs").onclick = () => { try { viewer.toggleFullscreen(); } catch(e) { toast("Fullscreen isn't available here"); } };
+  $("start").onclick = () => $("intro").classList.add("gone");
+  if (editing || hashScene) $("intro").classList.add("gone");
+  document.addEventListener("keydown", e => {
+    if (e.target.tagName === "INPUT") return;
+    if (e.key === "ArrowRight" && e.shiftKey) $("next").click();
+    if (e.key === "ArrowLeft" && e.shiftKey) $("prev").click();
+    if (e.key === "Escape") closeDrawer();
+  });
+
+  function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(()=>t.classList.remove("show"), 1800); }
+
+  // ---------- editor ----------
+  if (!editing) return;
+  let armed = false;
+  order.forEach(id => { const o = document.createElement("option"); o.value = id; o.textContent = byId[id].title + " ("+id.slice(0,2)+":"+id.slice(2,4)+":"+id.slice(4)+")"; $("edTarget").appendChild(o); });
+  function save(){
+    T.scenes = order.map(id => { const s = byId[id]; const row = [id, s.title, s.links]; if (s.start != null) row.push(s.start); return row; });
+    try { localStorage.setItem(STORE, JSON.stringify(T)); } catch(e){}
+    $("edOut").value = JSON.stringify(T);
+  }
+  function rebuild(id){
+    const sc = viewer.getConfig().hotSpots || [];
+    sc.slice().forEach(h => viewer.removeHotSpot(h.id, id));
+    hs.from = id; byId[id].links.forEach((l, i) => viewer.addHotSpot(hs(l, i), id));
+  }
+  function renderEditor(){
+    const id = viewer.getScene(), s = byId[id];
+    $("edTitle").value = s.title;
+    const ul = $("edList"); ul.innerHTML = "";
+    s.links.forEach((l, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = '<span></span><button>Remove</button>';
+      li.querySelector("span").innerHTML = "→ " + (l[2] || byId[l[0]].title).replace(/</g,"&lt;") + " <small>yaw " + Math.round(l[1]) + "°</small>";
+      li.querySelector("button").onclick = () => { s.links.splice(i,1); rebuild(id); save(); renderEditor(); };
+      ul.appendChild(li);
+    });
+    if (!s.links.length) ul.innerHTML = "<li><small>No links yet</small></li>";
+    save();
+  }
+  $("edArm").onclick = () => { armed = !armed; $("edArm").classList.toggle("armed", armed); $("edArm").textContent = armed ? "Click the view…" : "Place link"; };
+  $("pano").addEventListener("mouseup", e => {
+    if (!armed) return;
+    const [pitch, yaw] = viewer.mouseEventToCoords(e);
+    const id = viewer.getScene(), target = $("edTarget").value, label = $("edLabel").value.trim();
+    if (target === id) { toast("Pick a different room"); return; }
+    const link = [target, Math.round(yaw*10)/10, label || undefined, Math.round(pitch*10)/10];
+    if (!label) link[2] = null;
+    byId[id].links.push(link);
+    rebuild(id); armed = false; $("edArm").classList.remove("armed"); $("edArm").textContent = "Place link"; $("edLabel").value = "";
+    renderEditor(); toast("Link added");
+  });
+  $("edStart").onclick = () => { byId[viewer.getScene()].start = Math.round(viewer.getYaw()); save(); toast("Start view saved"); };
+  $("edTitle").onchange = e => { const id = viewer.getScene(); byId[id].title = e.target.value; update(); save(); };
+  $("edCopy").onclick = async () => { save(); try { await navigator.clipboard.writeText($("edOut").value); toast("Config copied"); } catch(e) { $("edOut").select(); toast("Select the text below and copy it"); } };
+  $("edReset").onclick = () => { try { localStorage.removeItem(STORE); } catch(e){} location.reload(); };
+})();
+</script>
+</body>
+</html>
