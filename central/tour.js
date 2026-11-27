@@ -2,9 +2,9 @@
 window.TOUR = {
   title: "Garage Society Central",
   first: "100642",
-  floors: [{ label: "5/F", first: "100642" }],
+  floors: [{ label: "4/F", first: "105422" }, { label: "5/F", first: "100642" }],
   scenes: [
-    ["100642", "Lift Lobby", [["100734", 176, "Reception"]]],
+    ["100642", "Lift Lobby", [["100734", 176, "Reception"], ["105422", 110, "Lift to 4/F", -5]]],
     ["100734", "Reception", [["102022", -120, "Lounge"], ["102620", 134, "Offices & Meeting Rooms", -4], ["102502", 167, "Pantry", -5], ["100642", 1, "Lift Lobby"]]],
     ["102022", "Lounge", [["102113", 138, "Lounge & Bar"], ["102300", -169, "Private Office"], ["100734", 68, "Reception"]]],
     ["102113", "Lounge & Bar", [["102620", 57, "Offices & Meeting Rooms", 0], ["102502", 105, "Pantry"], ["102200", -161, "Private Office"], ["102300", -136, "Private Office"], ["102022", -28, "Lounge"]]],
@@ -25,6 +25,22 @@ window.TOUR = {
     ["104058", "Office Corridor", [["104200", -85, "Private Office"], ["104247", 102], ["103502", 10]]],
     ["104200", "Private Office", [["104058", -169, "Back to corridor"]]],
     ["104247", "Office Corridor", [["104344", -179], ["104058", 4]]],
-    ["104344", "Office Corridor", [["100642", -166, "Lift Lobby"], ["104247", 11]]]
+    ["104344", "Office Corridor", [["100642", -166, "Lift Lobby"], ["104247", 11]]],
+    // ---- 4/F ----
+    ["105422", "4/F Lift Lobby", [["105519", -11, "Entrance"], ["100642", 45, "Lift to 5/F", -5]]],
+    ["105519", "Entrance", [["110046", -25, "Lounge & Pantry"], ["105821", 94, "Coworking Table"], ["105422", -171, "Lift Lobby"]]],
+    ["105821", "Coworking Table", [["105953", 21, "Meeting Room C"], ["105907", 60, "Phone Booth"], ["110046", -120, "Pantry"], ["105519", -153, "Entrance"]]],
+    ["105907", "Phone Booth", [["105821", -150, "Back to lounge"]]],
+    ["105953", "Meeting Room C", [["105821", -140, "Back to lounge"]]],
+    ["110046", "Lounge & Pantry", [["110135", 7, "Offices"], ["110335", -77], ["105821", 120, "Coworking Table"]]],
+    ["110135", "Office Corridor", [["110226", 84], ["110046", -171, "Lounge"]]],
+    ["110226", "Office Corridor", [["110135", -167, "Lounge"]]],
+    ["110335", "Pantry", [["110421", -162, "Offices"], ["110046", 15, "Lounge"]]],
+    ["110421", "Office Corridor", [["110514", -171], ["110335", 101, "Pantry"]]],
+    ["110514", "Office Corridor", [["110605", -80], ["110421", 5, "Pantry"]]],
+    ["110605", "Office Corridor", [["110652", -98, "Window Office"], ["110740", -170, "Private Office"], ["110837", 120, "Team Office"], ["110514", 16]]],
+    ["110652", "Window Office", [["110605", 72, "Back to corridor"]]],
+    ["110740", "Private Office", [["110605", -175, "Back to corridor"]]],
+    ["110837", "Team Office", [["110605", 18, "Back to corridor"]]]
   ]
 };
